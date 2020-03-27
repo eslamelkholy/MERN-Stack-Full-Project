@@ -76,7 +76,7 @@ class Register extends React.Component {
             };
             Axios.post("http://localhost:8080/register", formData, config)
                 .then((res) => {
-                    // setTimeout(function(){window.location.href="http://localhost:3000/login"},3000);
+                    setTimeout(function(){window.location.href="http://localhost:3000/login"},3000);
                 })
                 .catch((err) => console.log(err))
         }
