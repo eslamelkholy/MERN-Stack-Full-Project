@@ -1,0 +1,21 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+li{
+    list-style: none;
+}
+.container{
+    margin-top: 50px;
+
+}
+table{
+    margin-top: 20px;
+}
+h1{
+    color: lightseagreen;
+}
+.crud{
+    margin-left: 10px;
+    width: 70px;
+}

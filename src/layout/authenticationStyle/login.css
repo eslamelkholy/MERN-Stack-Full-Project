@@ -1,0 +1,32 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.row{
+    margin-top: 50px;
+    width: 100%;
+}
+.form{
+    margin-left: 50px;
+}
+.mySlider{
+    margin-left: 50px;
+}
+img{
+    height: 600px;
+}
+.btn-danger{
+  margin-left: 45px;
+}
+.signBtn{
+  margin-top: -50px;
+  margin-left: 10px;
+}
+h1{
+  text-align: center;
+  margin-top: 0px !important;
+  color: lightskyblue;
+}
+.loginButtons{
+  margin-left: 80px;
+}
