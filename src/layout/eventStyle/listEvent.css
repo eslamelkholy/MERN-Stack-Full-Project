@@ -19,3 +19,9 @@ h1{
     margin-left: 10px;
     width: 70px;
 }
+#deleteEvent{
+    margin-left: 8px;
+}
+#editEvent{
+    margin-left: -21px;
+}

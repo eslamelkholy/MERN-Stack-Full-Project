@@ -3,7 +3,8 @@ h1 {
     color: lightseagreen;
 }
 .HeaderTitle{
-    margin-top: -38px;
+    margin-top: -38px !important;
+    margin-bottom: 32px !important;
 }
 
 .jumbotron {

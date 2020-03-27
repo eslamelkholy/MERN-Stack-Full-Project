@@ -37,13 +37,14 @@ class EditEvent extends React.Component
         });
     }
     onFormSubmit = (e)=>{
+        e.preventDefault();
         Axios.post("http://localhost:8080/event/update",{
             _id : this.state._id,
             title : this.state.title,
             date : this.state.date,
             mainSpeaker : this.state.mainSpeaker,
             otherSpeaker : this.state.otherSpeaker
-        }).then(res => console.log("Added"));
+        }).then(res => this.props.history.push("/listEvents"));
     }
     render(){
         let mainSpeakers = this.state.speakersArray.map((speaker,index) =>{

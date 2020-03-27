@@ -21,8 +21,8 @@ class ListEvents extends React.Component
                     </td>
                     <td>
                         {/* pathname , state */}
-                        <Link className="btn btn-primary" to={`/editEvent/${event._id}`}>Edit</Link> 
-                        <Link className="btn btn-danger editDeleteBtn" to="/listEvents" onClick={()=>this.props.handlerDelete(event._id)}>Delete</Link>
+                        <Link className="btn btn-primary" id="editEvent" to={`/editEvent/${event._id}`}>Edit</Link> 
+                        <Link className="btn btn-danger editDeleteBtn" id="deleteEvent" to="/listEvents" onClick={()=>this.props.handlerDelete(event._id)}>Delete</Link>
                     </td>
                 </tr>
             )
