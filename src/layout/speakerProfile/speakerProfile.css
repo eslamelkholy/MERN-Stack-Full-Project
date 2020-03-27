@@ -1,0 +1,11 @@
+.updateMessage{
+    font-size: 19px;
+    color: tomato;
+    font-weight: 600;
+    width: 562px;
+    border: 2px solid;
+    border-radius: 18%;
+}
+h1{
+    margin-bottom: -5px;
+}

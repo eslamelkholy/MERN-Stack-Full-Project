@@ -1,0 +1,20 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.container{
+    margin-top: 50px;
+}
+h1{
+    color: lightseagreen;
+    margin-bottom: 50px;
+}
+select{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.btn-success{
+    margin-left: 180px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}

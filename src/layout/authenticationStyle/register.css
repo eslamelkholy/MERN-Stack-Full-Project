@@ -1,0 +1,22 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.container{
+    margin-top: 50px;
+}
+h1{
+    color: lightseagreen;
+    margin-bottom: 50px;
+}
+span{
+    float: right;
+    width: 200px;
+    text-align: center;
+    border-radius: 10%;
+
+}
+.btn-success{
+    width: 200px;
+    font-size: 22px;
+}
