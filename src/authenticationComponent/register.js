@@ -34,19 +34,29 @@ class Register extends React.Component {
     handleValidation = () => {
         this.setState({ usernameError: "", passwordError: "", emailError: "", cityError: ""});
         if (this.state.username.length == 0)
-            this.setState({ usernameError: "Username Can't Be Empty", formIsValid: false });
+        {
+            this.setState({ usernameError: "Username Can't Be Empty"});
+            this.state.formIsValid = false;
+        }
         if (this.state.password.length < 5)
-            this.setState({ passwordError: "Your Password too Weak", formIsValid: false });
+        {
+            this.setState({ passwordError: "Your Password too Weak" });
+            this.state.formIsValid = false;
+        }   
         if (!this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i))
-            this.setState({ emailError: "Please Enter a Valid Email", formIsValid: false });
+        {
+            this.setState({ emailError: "Please Enter a Valid Email"});
+            this.state.formIsValid = false;
+        }
         if (this.state.city.length < 2)
-            this.setState({ cityError: "Please Fill This Field", formIsValid: false });
-
+        {
+            this.setState({ cityError: "Please Fill This Field"});
+            this.state.formIsValid = false;
+        }
         return this.state.formIsValid;
     }
     onFormSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.file);
         if (this.handleValidation()) 
         {
             $("#msgSuccessful").show();
@@ -66,7 +76,7 @@ class Register extends React.Component {
             };
             Axios.post("http://localhost:8080/register", formData, config)
                 .then((res) => {
-                    setTimeout(function(){window.location.href="http://localhost:3000/login"},3000);
+                    // setTimeout(function(){window.location.href="http://localhost:3000/login"},3000);
                 })
                 .catch((err) => console.log(err))
         }
@@ -121,7 +131,7 @@ class Register extends React.Component {
                         imgExtension={[".jpg", ".gif", ".png"]}
                         maxFileSize={5242880}
                     />
-                    <input type="submit" value="Register" onClick={this.onFormSubmit} class="btn btn-success" />
+                    <input type="submit" id="registerBtn" value="Register" onClick={this.onFormSubmit} class="btn btn-success" />
                     <div class="p-3 mb-2 bg-info text-white" id="msgSuccessful">
                         Registeration Completed Successfully
                     </div>

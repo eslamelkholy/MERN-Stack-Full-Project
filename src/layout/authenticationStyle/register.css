@@ -28,3 +28,7 @@ span{
     font-size: 20px;
     font-weight: bold;
 }
+#registerBtn{
+    width: 100%;
+    margin-left: -1px;
+}
