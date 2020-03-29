@@ -29,7 +29,10 @@ class Register extends React.Component {
         if (pictureFiles.length > 0)
             this.setState({ file: pictureFiles[pictureFiles.length - 1] });
         else
-            this.setState({imgExtensionError : "Please Enter a Valid Extension", formIsValid : false});
+        {
+            this.setState({imgExtensionError : "Please Enter a Valid Extension"});
+            this.state.formIsValid = false;
+        }
     }
     handleValidation = () => {
         this.setState({ usernameError: "", passwordError: "", emailError: "", cityError: ""});
@@ -56,6 +59,7 @@ class Register extends React.Component {
         return this.state.formIsValid;
     }
     onFormSubmit = (e) => {
+        console.log(this.handleValidation());
         e.preventDefault();
         if (this.handleValidation()) 
         {
@@ -133,7 +137,7 @@ class Register extends React.Component {
                     />
                     <input type="submit" id="registerBtn" value="Register" onClick={this.onFormSubmit} class="btn btn-success" />
                     <div class="p-3 mb-2 bg-info text-white" id="msgSuccessful">
-                        Registeration Completed Successfully
+                        Registeration Completed Successfully You Will be Redirect Now ...
                     </div>
                 </form>
             </div>

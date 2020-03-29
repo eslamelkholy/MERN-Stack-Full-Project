@@ -47,7 +47,7 @@ class App extends React.Component {
             return (
                 <Fragment>
                     <BrowserRouter>
-                        <Header  />
+                        <Header isAuthenticated={this.setAuthenticationVal} />
                         <EventApp />
                         <SpeakerApp />
                         <AuthenticationApp userId = {this.setUserId} isAuthenticated={this.setAuthenticationVal} />

@@ -30,3 +30,10 @@ h1{
 .loginButtons{
   margin-left: 80px;
 }
+
+.warrningMsg{
+  margin-top: 10px;
+  width: 80%;
+  height: 30px;
+  margin-bottom: -10px;
+}
