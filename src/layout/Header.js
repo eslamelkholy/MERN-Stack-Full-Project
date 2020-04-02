@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-
+import './speakerProfile/speakerHeader.css';
 
 class Header extends React.Component {
     state = {
@@ -20,7 +20,7 @@ class Header extends React.Component {
         return (
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <Link to="/admin/profile" class="navbar-brand" href="#">Administration</Link>
+                <Link to="/adminProfile" class="navbar-brand" href="#">Administration</Link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -45,10 +45,12 @@ class Header extends React.Component {
                     <li class="nav-item active" id="logoutList" >
                         <a class="nav-link" id="logout" href="/login" onClick={this.onLogout}>Logout</a>
                     </li>
+                    <li class="nav-item active" id="logoutList" >
+                        <img id="userImage" src="images/1.jpg" />
+                    </li>
                 </ul>
             </nav>
         )
     }
 }
-
 export default Header;

@@ -44,7 +44,7 @@ class EditEvent extends React.Component
             date : this.state.date,
             mainSpeaker : this.state.mainSpeaker,
             otherSpeaker : this.state.otherSpeaker
-        }).then(res => this.props.history.push("/listEvents"));
+        }).then(res => window.location.href = "http://localhost:3000/listEvents");
     }
     render(){
         let mainSpeakers = this.state.speakersArray.map((speaker,index) =>{

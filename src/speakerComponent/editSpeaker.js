@@ -25,6 +25,7 @@ class EditStudent extends React.Component{
         });
     }
     onFormUpdate = (e)=>{
+        e.preventDefault();
         Axios.post("http://localhost:8080/speaker/update",{
             _id : this.state._id,
             fullName : this.state.fullName,
@@ -32,14 +33,14 @@ class EditStudent extends React.Component{
             password : this.state.password,
             city : this.state.city
         }).then(res =>{
-            console.log("Updated");
+            window.location.href = "http://localhost:3000/listSpeakers";
         })
     }
     render()
     {
       return(
         <div className="container">
-            <form action="/list" >
+            <form>
                 <div className="form-group">
                         <label>Student ID</label>
                         <input type="text" className="form-control" value={this.state._id}
@@ -65,7 +66,7 @@ class EditStudent extends React.Component{
                     <input id="age" type="text" className="form-control" value={this.state.city}
                     onChange={(e) =>{this.setState({city : e.target.value})}} name = "city" />
                 </div>
-                <button type="submit" class="btn btn-success" onClick={this.onFormUpdate}>Add Speaker</button>
+                <button type="submit" class="btn btn-success" onClick={this.onFormUpdate}>Edit Speaker</button>
             </form>
         </div>
       )

@@ -1,64 +1,99 @@
 const express = require("express");
 const authenticationRouter = express.Router();
 let path = require("path");
+const bcrypt = require('bcrypt');
 var multer = require('multer');
-const storage = multer.diskStorage({
-    //Storage the Files in Front End Path
-    destination: "D:\\ITI\\23-React\\myproject\\public\\images",
-   filename: function(req, file, cb){
-      cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
-   }
-});
-//Handle The Upload Function
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 1000000 },
-})
 //Fetch Database Speakers
 let mongoose = require("mongoose");
 require("./../Models/speakerModel");
 let speakers = mongoose.model("speaker");
 //Express Validator
 const { check, validationResult } = require('express-validator');
-
-//Get Login
-authenticationRouter.get("/login", (request, response) => {
-    response.render("Authentication/login");
+const storage = multer.diskStorage({
+    destination: "D:\\ITI\\23-React\\myproject\\public\\images",
+    filename: function (req, file, cb) {
+        cb(null, "IMAGE-" + Date.now() + path.extname(file.originalname));
+    }
 });
+//Handle The Upload Function
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 },
+})
+const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
+// ===================================================
+// ==================== Routers =======================
 //Post Login Validation
-authenticationRouter.post("/login", (request, response, next) => {
+authenticationRouter.post("/login", (request, response) => {
     if (request.body.username == "eslam" && request.body.password == "123") {
-        // request.session._id = 0;
-        request.session.role = "admin";
-        response.send({ id: 0, role: "admin" });
-        // response.redirect("/admin/profile");
-        // next();
+        user = { username: "eslam", password: "123" };
+        const accessToken = generateAccessToken("0");
+        response.json({
+            token : accessToken,
+            user: {
+                id: "0",
+                fullName: "Eslam Elkholy",
+                image: "1.jpg",
+                role: "admin"
+            }
+        });
     }
     else {
-        speakers.findOne(request.body).then((speaker) => {
+        speakers.findOne({ username: request.body.username }).then((speaker) => {
             if (speaker) {
-                request.session._id = speaker._id;
-                request.session.name = speaker.fullName;
-                response.locals.speakerName = request.session.name;
-                request.session.role = "speaker";
-                response.send({ id: speaker._id, role: "speaker" , fullName : speaker.fullName, image : speaker.image});
-                // next();
+                // Validate Password
+                bcrypt.compare(request.body.password, speaker.password)
+                    .then(isMatch => {
+                        if (!isMatch)
+                            return response.send("None");
+
+                        let token = generateAccessToken(speaker.id);
+                        response.json({
+                            token,
+                            user: {
+                                id: speaker.id,
+                                fullName: speaker.fullName,
+                                image: speaker.image,
+                                role: "speaker"
+                            }
+                        });
+                    })
             }
-            else {
-                request.flash("failedLogin", "Sorry Username or Password Doesn't Exist Please Enter a Valid Data!");
-                response.locals.message = request.flash();
-                response.send("None")
-            }
+            else
+                return response.send("None")
         }).catch((err) => {
             console.log(err);
         });
     }
 });
-//Register get Page
-authenticationRouter.get("/register", (request, response) => {
-    response.render("Authentication/register");
+authenticationRouter.post("/validateUser", auth, (request, response) => {
+    speakers.findOne({ _id: request.user.id }).then((speaker) => {
+        if (speaker) {
+            if (speaker._id == 0)
+                response.json({
+                    user: {
+                        id: speaker._id,
+                        fullName: speaker.fullName,
+                        image: speaker.image,
+                        role: "admin"
+                    }
+                })
+            else
+                response.json({
+                    user: {
+                        id: speaker._id,
+                        fullName: speaker.fullName,
+                        image: speaker.image,
+                        role: "speaker"}})
+        }
+        else
+            return response.send("None")
+        
+    }).catch((err) => {
+        console.log(err);
+    });
 });
-
 //Register Post Page
 authenticationRouter.post("/register", upload.single('file'), [check('password').isLength({ min: 5 }),
 check("username").notEmpty(),
@@ -79,31 +114,30 @@ check("fullName").isLength({ min: 3 }),
             "address.building": request.body.building,
             "image": request.file.filename
         });
-        newSpeaker.save().then((data) => {
-            // console.log(request.file) // this does log the uploaded image data.
-            response.send("done");
-            // response.redirect("/login");
-        }).catch((err) => {
-            console.log(err);
-        });
+        // Create salt & hash
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(newSpeaker.password, salt, (err, hash) => {
+                if (err) throw err;
+                newSpeaker.password = hash;
+                newSpeaker.save().then((data) => {
+                    let token = generateAccessToken(newSpeaker.id);
+                    response.json({
+                        token,
+                        user: {
+                            id: newSpeaker.id,
+                            name: newSpeaker.fullName,
+                        }
+                    })
+                }).catch((err) => {
+                    console.log(err);
+                });
+            });
+        })
     }
-    else {
-        errors.array().forEach((err) => {
-            var errorName = err.param;
-            console.log(errorName);
-            request.flash(errorName, errorName);
-        });
-        response.locals.message = request.flash();
-        response.render("Authentication/register");
-    }
+    else
+        response.status(401).json({ msg: "No Token, Authorized Denied" });
 });
-
-//Logout Page & Destroy Session
-authenticationRouter.get("/logout", (request, response) => {
-    request.session.destroy((err) => {
-        if (err)
-            return console.log(err);
-        response.redirect("/login");
-    })
-});
+function generateAccessToken(userId) {
+    return jwt.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
+}
 module.exports = authenticationRouter;

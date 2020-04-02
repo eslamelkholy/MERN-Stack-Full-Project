@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import Axios from 'axios'
 import $ from 'jquery'
 import '../layout/authenticationStyle/register.css'
@@ -25,7 +25,6 @@ class Register extends React.Component {
         $("#msgSuccessful").hide();
     }
     onDrop = (pictureFiles, pictureDataURLs) => {
-        console.log(pictureFiles.length);
         if (pictureFiles.length > 0)
             this.setState({ file: pictureFiles[pictureFiles.length - 1] });
         else
@@ -59,7 +58,6 @@ class Register extends React.Component {
         return this.state.formIsValid;
     }
     onFormSubmit = (e) => {
-        console.log(this.handleValidation());
         e.preventDefault();
         if (this.handleValidation()) 
         {
@@ -80,6 +78,7 @@ class Register extends React.Component {
             };
             Axios.post("http://localhost:8080/register", formData, config)
                 .then((res) => {
+                    console.log(res);
                     setTimeout(function(){window.location.href="http://localhost:3000/login"},3000);
                 })
                 .catch((err) => console.log(err))
@@ -88,6 +87,7 @@ class Register extends React.Component {
     render() {
         return (
             <div class="container">
+                <a className="btn btn-info" href="/login">Back To Login Page >> </a>
                 <h1 align="Center">Speakers Register Page</h1>
                 <form class="col-6 offset-3" enctype="multipart/form-data">
                     <div class="form-group">

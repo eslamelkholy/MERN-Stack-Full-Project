@@ -9,6 +9,7 @@ class Login extends React.Component {
         warrningMsg: ""
     }
     componentDidMount() {
+        localStorage.removeItem('token');
         $("#msgWarning").hide();
     }
     onFormSubmit = (e) => {
@@ -17,26 +18,23 @@ class Login extends React.Component {
             username: this.state.username,
             password: this.state.password
         }).then((res) => {
-            if (res.data.role == "admin") {
-                this.props.userId(res.data.id);
-                this.props.isAuthenticated("Admin");
-                this.props.history.push("/adminProfile");
-                localStorage.setItem("id", res.data.id);
-                localStorage.setItem("name", res.data.fullName);
-                localStorage.setItem("img", "15.jpg");
-            }
-            else if (res.data.role == "speaker") {
-                this.props.userId(res.data.id, res.data.fullName);
-                this.props.isAuthenticated("Speaker");
-                // this.props.history.push("/speakerProfile");
-                window.location.href = "http://localhost:3000/speakerProfile";
-                localStorage.setItem("id", res.data.id);
-                localStorage.setItem("name", res.data.fullName);
-                localStorage.setItem("img", res.data.image);
-            }
-            else {
+            if (res.data === "None") {
                 this.props.isAuthenticated("None");
                 $("#msgWarning").show();
+            }
+            else {
+                if (res.data.user.role == "admin") {
+                    this.props.userId(0, "Eslam Elkholy");
+                    this.props.isAuthenticated("Admin");
+                    window.location.href = "http://localhost:3000/adminProfile";
+                    localStorage.setItem("token", res.data.token);
+                }
+                else if (res.data.user.role == "speaker") {
+                    this.props.userId(res.data.user.id, res.data.user.fullName);
+                    this.props.isAuthenticated("Speaker");
+                    window.location.href = "http://localhost:3000/speakerProfile";
+                    localStorage.setItem("token", res.data.token);
+                }
             }
         })
     }
@@ -85,7 +83,7 @@ class Login extends React.Component {
                                     </div>
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="/images/1.jpg" class="d-block w-100" alt="..." />
+                                    <img src="/images/1(2).jpg" class="d-block w-100" alt="..." />
                                     <div class="carousel-caption d-none d-md-block">
                                         <h5>Second slide </h5>
                                         <p>Hello To Nodejs Events Management Project</p>

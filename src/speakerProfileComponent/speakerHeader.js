@@ -4,18 +4,8 @@ import $ from 'jquery';
 import '../layout/speakerProfile/speakerHeader.css';
 
 class SpeakerHeader extends React.Component {
-    state = {
-        username: ""
-    }
-    componentDidMount() {
-        this.setState({
-            username: localStorage.getItem("name")
-        })
-    }
     onLogout = (e) => {
-        localStorage.removeItem("id");
-        localStorage.removeItem("name");
-        localStorage.removeItem("img");
+        localStorage.removeItem('token');
     }
     render() {
         return (
@@ -35,10 +25,10 @@ class SpeakerHeader extends React.Component {
                         <a class="nav-link" id="logout" href="/login" onClick={this.onLogout}>Logout</a>
                     </li>
                     <li class="nav-item active">
-                        <button class="btn btn-outline-success my-2 my-sm-0" id="userHeaderName">{this.state.username}</button>
+                        <button class="btn btn-outline-success my-2 my-sm-0" id="userHeaderName">{this.props.fullName}</button>
                     </li>
                     <li>
-                        <img id="userImage" src={"images/"+localStorage.getItem("img")} />
+                        <img id="userImage" src={"images/"+this.props.image} />
                     </li>
                 </ul>
             </nav>

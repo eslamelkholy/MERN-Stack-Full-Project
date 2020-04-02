@@ -1,14 +1,15 @@
+require('dotenv').config();
 let express = require("express");
 let path = require("path");
 let mongoose = require("mongoose");
-var multer  = require('multer')
+var multer = require('multer')
 //My Routers Objects Which i'am Going to use them To Routing Users
 let authenticationRouter = require("./Routers/authenticationRouter");
 let speakerRouter = require("./Routers/speakers");
 let eventRouter = require("./Routers/events");
 let adminRouter = require("./Routers/admin");
 var cookieParser = require('cookie-parser');
-let cors=require("cors");
+let cors = require("cors");
 //Connect Flash
 let flash = require("connect-flash");
 //Validation
@@ -16,13 +17,6 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 //Session
 let session = require("express-session");
-//Front End Api's
-// multer=require("multer");
-
-// let multerMW=multer({
-//     dest:"./publics/Images"
-// });
-
 //Server Establishment
 const server = express();
 server.listen(8080, () => {
@@ -34,10 +28,10 @@ mongoose.connect("mongodb://localhost:27017/events", { useNewUrlParser: true })
     .then(() => { console.log("Connected....") })
     .catch((err) => { console.log(err + ""); }
     )
-    
+const auth = require('./middleware/auth');
 //********** Server Settings **********/
 //Cors For Crossplatform Domain
-server.use(cors({credentials: true, origin: true}));
+server.use(cors({ credentials: true, origin: true }));
 server.use(cookieParser('This is a secret'))
 server.locals.moment = require("moment");
 server.use(express.static(path.join(__dirname, "public")));
@@ -53,20 +47,13 @@ server.use(flash());
 server.use(bodyParser.json());
 
 //*****    Routing From Routers (Controllers)   ***********/
+
 server.use(authenticationRouter);
-// Session MiddleWare
-server.use((request, response, next) => {
-    if (request.session.role)
-        next();
-    else
-        next();
-        // response.redirect("/login");
-});
 server.use("/admin", adminRouter);
 server.use("/speaker", speakerRouter);
 server.use("/event", eventRouter);
 
-server.use((request,response) =>{
+server.use((request, response) => {
     response.send("404 NOT Found");
 });
 

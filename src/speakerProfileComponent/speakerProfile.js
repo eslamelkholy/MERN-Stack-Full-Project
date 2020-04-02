@@ -10,13 +10,21 @@ class SpeakerProfile extends React.Component {
         username: "",
         password: "",
         city: "",
-        myEvents: []
+        myEvents: [],
     }
     componentDidMount() {
-        this.getSpeakerProfileData();
+        const token = localStorage.getItem('token');
+        const config = {
+            headers : {
+                "Content-type" : "application/json"
+            }
+        }
+        if(token)
+            config.headers['x-auth-token'] = token;
+        this.getSpeakerProfileData(config);
     }
-    getSpeakerProfileData = () => {
-        Axios.post("http://localhost:8080/speaker/profile", { userId: this.props.id })
+    getSpeakerProfileData = (config) => {
+        Axios.post("http://localhost:8080/speaker/profile", { userId: this.props.id }, config)
             .then((speaker) => {
                 this.setState({
                     id: speaker.data.speakerData._id,
@@ -26,6 +34,8 @@ class SpeakerProfile extends React.Component {
                     city: speaker.data.speakerData.address.city,
                     myEvents: speaker.data.currentEvent
                 });
+            }).catch(err => {
+                console.log(err);
             })
     }
     onFormSubmit = (e) => {
@@ -43,11 +53,21 @@ class SpeakerProfile extends React.Component {
         })
     }
     cancelEvent = (speakerId, eventId, isMainSpeaker) => {
+        const token = localStorage.getItem('token');
+        const config = {
+            headers : {
+                "Content-type" : "application/json"
+            }
+        }
+        if(token)
+            config.headers['x-auth-token'] = token;
+        
         Axios.post("http://localhost:8080/event/cancel", {
             isMainSpeaker: isMainSpeaker,
             eventId: eventId,
             speakerId: speakerId,
-        }).then(res => this.getSpeakerProfileData());
+        }, config);
+        this.getSpeakerProfileData(config);
     }
     render() {
         let myEvents = this.state.myEvents.map((event, index) => {
@@ -89,7 +109,7 @@ class SpeakerProfile extends React.Component {
                         </div>
                         <div class="form-group">
                             <label>UserPass</label>
-                            <input type="password" class="form-control" name="password" value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value }) }} />
+                            <input type="password" class="form-control" name="password" value="" onChange={(e) => { this.setState({ password: e.target.value }) }} />
                         </div>
                         <div class="form-group">
                             <label>Address City</label>

@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import '../layout/eventStyle/listEvent.css'
+import moment from 'moment';
 class ListEvents extends React.Component
 {
     render(){
@@ -9,7 +10,8 @@ class ListEvents extends React.Component
                 <tr key={index}>
                     <td>{event._id}</td>
                     <td>{event.title}</td>
-                    <td>{event.date}</td>
+                    
+                    <td>{moment(event.date).utc().format('YYYY-MM-DD')}</td>
                     <td>{event.mainSpeaker ? event.mainSpeaker.fullName : <p>Sorry Not Exist</p>}</td>
                     <td>
                         <ul>
