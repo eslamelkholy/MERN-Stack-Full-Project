@@ -3,18 +3,8 @@ import { Link } from 'react-router-dom'
 import './speakerProfile/speakerHeader.css';
 
 class Header extends React.Component {
-    state = {
-        username: ""
-    }
-    componentDidMount() {
-        this.setState({
-            username: localStorage.getItem("name")
-        })
-    }
     onLogout = (e) => {
-        localStorage.removeItem("id");
-        localStorage.removeItem("name");
-        localStorage.removeItem("img");
+        localStorage.removeItem('token');
     }
     render() {
         return (
