@@ -30,12 +30,12 @@ class AddStudent extends React.Component{
             <div className="container">
                 <form action="/listSpeakers" >
                     <div className="form-group">
-                        <label>Student Name</label>
+                        <label>Speaker Name</label>
                         <input type="text" className="form-control" value={this.state.name}  placeholder="Enter Student fullName"
                         onChange={(e) =>{this.setState({fullName : e.target.value})}}  />
                     </div>
                     <div className="form-group">
-                        <label >Student Username</label>
+                        <label >Speaker Username</label>
                         <input id="title" type="text" className="form-control" value={this.state.Department} placeholder="Enter Student Username"
                         onChange={(e) =>{this.setState({username : e.target.value})}} />
                     </div>

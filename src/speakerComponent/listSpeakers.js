@@ -22,7 +22,6 @@ class ListStudent extends React.Component{
         })
         return(
             <div className="container">
-                <br/><br/>
                 <table className="table text-center bg-dark text-light">
                     <tr>
                         <th>ID</th>

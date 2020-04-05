@@ -30,7 +30,6 @@ class SpeakerProfile extends React.Component {
                     id: speaker.data.speakerData._id,
                     fullName: speaker.data.speakerData.fullName,
                     username: speaker.data.speakerData.username,
-                    password: speaker.data.speakerData.password,
                     city: speaker.data.speakerData.address.city,
                     myEvents: speaker.data.currentEvent
                 });
@@ -109,7 +108,7 @@ class SpeakerProfile extends React.Component {
                         </div>
                         <div class="form-group">
                             <label>UserPass</label>
-                            <input type="password" class="form-control" name="password" value="" onChange={(e) => { this.setState({ password: e.target.value }) }} />
+                            <input type="password" class="form-control" name="password" value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value }) }} />
                         </div>
                         <div class="form-group">
                             <label>Address City</label>
