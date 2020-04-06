@@ -6,10 +6,11 @@
 2-Reactjs
 3-MongoDB
 4-MVC Design Pattern
-5-Jquery Ajax
-6-Bootstrap
-7-HTML
-8-CSS
+5-JWT ( Json Web Token )
+6-Jquery Ajax
+7-Bootstrap
+8-HTML
+9-CSS
 </pre>
 ### -Project Requirements
 <pre>
