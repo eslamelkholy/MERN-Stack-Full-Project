@@ -10,30 +10,31 @@ class Login extends React.Component {
     }
     componentDidMount() {
         localStorage.removeItem('token');
-        $("#msgWarning").hide();
+    }
+    showWarningMsg = () => {
+        $("#msgWarning").show();
+    }
+    userLoginValidation()
+    {
+        return postRequest("http://localhost:8080/login", { username: this.state.username, password: this.state.password });
     }
     onFormSubmit = (e) => {
         e.preventDefault();
-        Axios.post("http://localhost:8080/login", {
-            username: this.state.username,
-            password: this.state.password
-        }).then((res) => {
-            if (res.data === "None") {
-                this.props.isAuthenticated("None");
-                $("#msgWarning").show();
-            }
+        this.userLoginValidation().then(serverReply =>{
+            if (serverReply === "None")
+                this.showWarningMsg();
             else {
-                if (res.data.user.role == "admin") {
+                if (serverReply.user.role === "admin") {
                     this.props.userId(0, "Eslam Elkholy");
                     this.props.isAuthenticated("Admin");
                     window.location.href = "http://localhost:3000/adminProfile";
-                    localStorage.setItem("token", res.data.token);
+                    localStorage.setItem("token", serverReply.token);
                 }
-                else if (res.data.user.role == "speaker") {
-                    this.props.userId(res.data.user.id, res.data.user.fullName);
+                else if (serverReply.user.role === "speaker") {
+                    this.props.userId(serverReply.user.id, serverReply.user.fullName);
                     this.props.isAuthenticated("Speaker");
                     window.location.href = "http://localhost:3000/speakerProfile";
-                    localStorage.setItem("token", res.data.token);
+                    localStorage.setItem("token", serverReply.token);
                 }
             }
         })
@@ -111,5 +112,8 @@ class Login extends React.Component {
             </Fragment>
         )
     }
+}
+function postRequest(url, object) {
+    return Axios.post(url, object).then((res) => res.data);
 }
 export default Login;

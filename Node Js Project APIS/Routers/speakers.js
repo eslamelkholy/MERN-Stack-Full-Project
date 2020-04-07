@@ -8,7 +8,7 @@ require("./../Models/eventModel");
 let eventModel = mongoose.model("event");
 let fs = require('fs');
 let auth = require('../middleware/auth');
-
+const bcrypt = require('bcrypt');
 //=============================================
 // ********************   Admin Section   **********************
 //Speaker Own Profile
@@ -27,21 +27,25 @@ speakerRouter.post("/profile", auth, (request, response) => {
 });
 //Update Speaker Profile
 speakerRouter.post("/updateSpeakerProfile", (request, response) => {
-    speakerModel.updateOne({ _id: request.session._id }, {
-        $set:
-        {
-            "fullName": request.body.fullName,
-            "username": request.body.username,
-            "password": request.body.password,
-            "address.city": request.body.city
-
-        }
-    }).then((data) => {
-        request.session.name = request.body.fullName;
-        response.redirect("/speaker/profile");
-    }).catch((err) => {
-        console.log(err);
-    });
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(request.body.password, salt, (err, hash) => {
+            if (err) throw err;
+            speakerModel.updateOne({ _id: request.body._id }, {
+        
+                $set:
+                {
+                    "fullName": request.body.fullName,
+                    "username": request.body.username,
+                    "password": hash,
+                    "address.city": request.body.city
+                }
+            }).then((data) => {
+                response.redirect("/speaker/list");
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+    })
 });
 speakerRouter.get("/upcomingEvents", (request, response) => {
 
@@ -82,20 +86,25 @@ speakerRouter.get("/update/:id", (request, response) => {
 });
 //Update Speaker
 speakerRouter.post("/update", (request, response) => {
-    speakerModel.updateOne({ _id: request.body._id }, {
-        $set:
-        {
-            "fullName": request.body.fullName,
-            "username": request.body.username,
-            "password": request.body.password,
-            "address.city": request.body.city
-
-        }
-    }).then((data) => {
-        response.redirect("/speaker/list");
-    }).catch((err) => {
-        console.log(err);
-    });
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(request.body.password, salt, (err, hash) => {
+            if (err) throw err;
+            speakerModel.updateOne({ _id: request.body._id }, {
+        
+                $set:
+                {
+                    "fullName": request.body.fullName,
+                    "username": request.body.username,
+                    "password": hash,
+                    "address.city": request.body.city
+                }
+            }).then((data) => {
+                response.redirect("/speaker/list");
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+    })
 });
 
 //add Speaker Page
@@ -118,11 +127,17 @@ speakerRouter.post("/add", (request, response) => {
         "address.street": request.body.street,
         "address.building": request.body.building,
     });
-    newSpeaker.save().then((data) => {
-        console.log("Save");
-        response.redirect("/speaker/list");
-    }).catch((err) => {
-        console.log(err);
-    });
+    // Create salt & hash
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newSpeaker.password, salt, (err, hash) => {
+            if (err) throw err;
+            newSpeaker.password = hash;
+            newSpeaker.save().then((data) => {
+                console.log("Added");
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+    })
 });
 module.exports = speakerRouter;

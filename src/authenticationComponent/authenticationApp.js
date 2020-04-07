@@ -11,6 +11,7 @@ class AuthenticationApp extends Component
             <Fragment>
                 <Route exact path="/login" component ={(props)=> <Login userId = {this.props.userId} username = {this.props.username} isAuthenticated = {this.props.isAuthenticated} {...props} /> } />
                 <Route exact path="/register" component = {() => <Register /> }  />
+                <Route exact path="/" component ={(props)=> <Login userId = {this.props.userId} username = {this.props.username} isAuthenticated = {this.props.isAuthenticated} {...props} /> } />
             </Fragment>
         )
     }
