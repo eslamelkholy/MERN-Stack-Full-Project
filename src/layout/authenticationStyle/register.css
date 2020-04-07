@@ -27,6 +27,7 @@ span{
     text-align: center;
     font-size: 17px;
     font-weight: bold;
+    display: none;
 }
 #registerBtn{
     width: 100%;

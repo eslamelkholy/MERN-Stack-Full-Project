@@ -19,19 +19,14 @@ class Register extends React.Component {
         street: "",
         building: "",
         file: null,
+        emptyImage: "",
         formIsValid: true
     }
-    componentDidMount() {
-        $("#msgSuccessful").hide();
+    showSuccessMsg = () => {
+        $("#msgSuccessful").show();
     }
-    onDrop = (pictureFiles, pictureDataURLs) => {
-        if (pictureFiles.length > 0)
-            this.setState({ file: pictureFiles[pictureFiles.length - 1] });
-        else
-        {
-            this.setState({imgExtensionError : "Please Enter a Valid Extension"});
-            this.state.formIsValid = false;
-        }
+    onDrop = (pictureFiles) => {
+        this.state.file = pictureFiles[pictureFiles.length - 1];
     }
     handleValidation = () => {
         this.setState({ usernameError: "", passwordError: "", emailError: "", cityError: ""});
@@ -55,13 +50,26 @@ class Register extends React.Component {
             this.setState({ cityError: "Please Fill This Field"});
             this.state.formIsValid = false;
         }
+        if(this.state.file == null)
+        {
+            this.setState({ emptyImage : "Please Select Your Image"});
+            this.state.formIsValid = false;
+        }
         return this.state.formIsValid;
+    }
+    userRegisterValidation = (formData)=>{
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+        return postRequest("http://localhost:8080/register", formData, config)
     }
     onFormSubmit = (e) => {
         e.preventDefault();
         if (this.handleValidation()) 
         {
-            $("#msgSuccessful").show();
+            this.showSuccessMsg();
             const formData = new FormData();
             formData.append('file', this.state.file);
             formData.append('username', this.state.username);
@@ -71,17 +79,9 @@ class Register extends React.Component {
             formData.append('city', this.state.city);
             formData.append('street', this.state.street);
             formData.append('building', this.state.building);
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data'
-                }
-            };
-            Axios.post("http://localhost:8080/register", formData, config)
-                .then((res) => {
-                    console.log(res);
-                    setTimeout(function(){window.location.href="http://localhost:3000/login"},3000);
-                })
-                .catch((err) => console.log(err))
+            this.userRegisterValidation(formData).then(res =>{
+                setTimeout(function(){window.location.href="http://localhost:3000/login"},3000);
+            })
         }
     }
     render() {
@@ -135,6 +135,7 @@ class Register extends React.Component {
                         imgExtension={[".jpg", ".gif", ".png"]}
                         maxFileSize={5242880}
                     />
+                    <span class="bg-danger text-white">{this.state.emptyImage}</span>
                     <input type="submit" id="registerBtn" value="Register" onClick={this.onFormSubmit} class="btn btn-success" />
                     <div class="p-3 mb-2 bg-info text-white" id="msgSuccessful">
                         Registeration Completed Successfully You Will be Redirect Now ...
@@ -143,5 +144,10 @@ class Register extends React.Component {
             </div>
         )
     }
+}
+function postRequest(url, postData, config){
+    return Axios.post(url, postData, config)
+        .then(res => res)
+        .catch((err) => console.log(err))
 }
 export default Register;
